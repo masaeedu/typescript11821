@@ -1,27 +1,34 @@
 interface Node {
-    parent: Node;
+    parent: Node | undefined;
 }
 
-function shouldNodeBeConsidered1(ruleKey: string, node: Node): boolean {
-    for (let current: Node | undefined = node; current !== undefined; current = current.parent) { // works
+// Works
+function f(node: Node): boolean {
+    for (let current: Node | undefined = node; current !== undefined; current = current.parent) {
     }
-
     return false;
 }
 
-function shouldNodeBeConsidered2(ruleKey: string, node: Node): boolean {
-    for (
-        let current: Node | undefined = node;
-        current !== undefined;
-        current = current.parent // <-- [ts] Object is possibly 'undefined'.
-                                 //          let current: ts.Node | undefined
+// (14, 81): Object is possibly 'undefined'
+function f2(node: Node): boolean {
+    for (let current: Node | undefined = node; current !== undefined; current = current.parent) {
+        return true;
+    }
+    return false;
+}
 
-     ) {
-        if (shouldNodeBeConsidered2(ruleKey, current)) {
-            return true;
-        } else {
-            continue;
-        }
+// (22, 81): Object is possibly 'undefined'
+function f3(node: Node): boolean {
+    for (let current: Node | undefined = node; current !== undefined; current = current.parent) {
+        continue;
+    }
+    return false;
+}
+
+// (30, 81): Object is possibly 'undefined'
+function f4(node: Node): boolean {
+    for (let current: Node | undefined = node; current !== undefined; current = current.parent) {
+        break;
     }
     return false;
 }
